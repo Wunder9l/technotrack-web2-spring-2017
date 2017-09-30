@@ -5,15 +5,10 @@ from django.contrib.contenttypes.fields import GenericForeignKey, ContentType
 from core.models import ModelWithAuthor, ModelWithDates, User
 
 
-def add_event_for_object(instance):
-    event = Event(title=instance.get_title_for_event(instance.get_event_type(created=True)),
+def add_event_for_object(instance, created):
+    event = Event(title=instance.get_title_for_event(instance.get_event_type(created=created)),
                   user=instance.author,
                   object=instance)
-    event.save()
-
-
-def update_event_for_object(event, instance):
-    event.title = instance.get_title_for_event(event.type)
     event.save()
 
 
