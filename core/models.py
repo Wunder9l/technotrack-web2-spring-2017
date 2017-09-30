@@ -78,6 +78,9 @@ class ModelWithAuthor(models.Model):
 
 
 class WatchableModel(models.Model):
+    def get_event_type(self):
+        raise NotImplementedError
+
     def get_title_for_event(self, eventtype):
         raise NotImplementedError
 

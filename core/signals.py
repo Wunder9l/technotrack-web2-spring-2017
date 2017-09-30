@@ -1,5 +1,8 @@
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+
+from core.models import WatchableModel
+from event.models import Event, add_event_for_object, update_event_for_object
 from .models import ModelWithAuthor, Like
 
 
@@ -24,5 +27,21 @@ def like_pre_delete(instance, *args, **kwargs):
     instance.object.save()
 
 
+@receiver(post_save, sender=WatchableModel)
+def watchable_object_post_save(instance, created, *args, **kwargs):
+    if created:
+        add_event_for_object(instance)
+    else:
+        event_for_object = Event.objects.filter(object=instance)
+        if event_for_object:
+            event_for_object = event_for_object[0]
+            update_event_for_object(event_for_object, instance)
+        else:
+            add_event_for_object(instance)
+
+
 for model in ModelWithAuthor.__subclasses__():
     post_save.connect(model_with_author_post_save, model)
+
+    # for model in WatchableModel.__subclasses__():
+    # post_save.connect(m)
