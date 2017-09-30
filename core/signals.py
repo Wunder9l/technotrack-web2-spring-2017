@@ -29,15 +29,18 @@ def like_pre_delete(instance, *args, **kwargs):
 
 @receiver(post_save, sender=WatchableModel)
 def watchable_object_post_save(instance, created, *args, **kwargs):
-    if created:
-        add_event_for_object(instance)
-    else:
-        event_for_object = Event.objects.filter(object=instance)
-        if event_for_object:
-            event_for_object = event_for_object[0]
-            update_event_for_object(event_for_object, instance)
+    if instance.is_tracked():
+        # TODO: mb we need to create both edit and create event (2 distinct events on object editing)?
+        if created:
+            add_event_for_object(instance, instance)
         else:
-            add_event_for_object(instance)
+            event_for_object = Event.objects.filter(object=instance)
+            if event_for_object:
+                event_for_object = event_for_object[0]
+                event_for_object = instance.get_event_type(created=False)
+                update_event_for_object(event_for_object, instance)
+            else:
+                add_event_for_object(instance)
 
 
 for model in ModelWithAuthor.__subclasses__():

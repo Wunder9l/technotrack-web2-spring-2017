@@ -5,12 +5,36 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
+from event.eventtype import EventType, EVENT_SUBSCRIPTION
+
 RELATIONSHIP_FOLLOWING = 1
 RELATIONSHIP_BLOCKED = 2
 RELATIONSHIP_STATUSES = (
     (RELATIONSHIP_FOLLOWING, 'Following'),
     (RELATIONSHIP_BLOCKED, 'Blocked'),
 )
+
+
+class ModelWithDates(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class WatchableModel(models.Model):
+    def get_event_type(self, created):
+        raise NotImplementedError
+
+    def get_title_for_event(self, eventtype):
+        raise NotImplementedError
+
+    def is_tracked(self):
+        raise NotImplementedError
+
+    class Meta:
+        abstract = True
 
 
 class User(AbstractUser):
@@ -56,33 +80,26 @@ class User(AbstractUser):
             from_people__to_person=self)
 
 
-class Relationship(models.Model):
+class Relationship(WatchableModel, ModelWithDates):
     from_person = models.ForeignKey(User, related_name='from_people')
     to_person = models.ForeignKey(User, related_name='to_people')
     status = models.IntegerField(choices=RELATIONSHIP_STATUSES)
 
+    def get_event_type(self, created):
+        return EVENT_SUBSCRIPTION
 
-class ModelWithDates(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    def get_title_for_event(self, eventtype):
+        if RELATIONSHIP_FOLLOWING is self.status:
+            return "User " + self.from_person.get_username() + " has subscribed on " + self.to_person.get_username()
+        else:
+            "INVALID! (this event should not be created)"
 
-    class Meta:
-        abstract = True
+    def is_tracked(self):
+        return RELATIONSHIP_FOLLOWING == self.status
 
 
 class ModelWithAuthor(models.Model):
     author = models.ForeignKey(User)
-
-    class Meta:
-        abstract = True
-
-
-class WatchableModel(models.Model):
-    def get_event_type(self):
-        raise NotImplementedError
-
-    def get_title_for_event(self, eventtype):
-        raise NotImplementedError
 
     class Meta:
         abstract = True
