@@ -6,12 +6,15 @@ class Enum:
     choices = []
     map = {}
 
-    def __init__(self, enum_names):
-        if type(enum_names) != list:
-            raise TypeError()
-        else:
-            self.choices = enum_names
-            self.map = {self.choices[i]: i for i in range(len(self.choices))}
+    def __init__(self):
+        pass
+
+    # def __init__(self, enum_names):
+    #     if type(enum_names) != list:
+    #         raise TypeError()
+    #     else:
+    #         self.choices = enum_names
+    #         self.map = {self.choices[i]: i for i in range(len(self.choices))}
 
     def get_name(self, id):
         if id >= len(self.choices):

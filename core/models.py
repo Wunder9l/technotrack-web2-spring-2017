@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
-from event.eventtype import EventType, EVENT_SUBSCRIPTION
+from event.eventtype import EventType, EVENT_SUBSCRIPTION, EVENT_LIKE
 
 RELATIONSHIP_FOLLOWING = 1
 RELATIONSHIP_BLOCKED = 2
@@ -105,15 +105,28 @@ class ModelWithAuthor(models.Model):
         abstract = True
 
 
-class Like(ModelWithDates, ModelWithAuthor):
+class Like(ModelWithDates, ModelWithAuthor, WatchableModel):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     object = GenericForeignKey('content_type', 'object_id')
+
+    def get_event_type(self, created):
+        return EVENT_LIKE
+
+    def get_title_for_event(self, eventtype):
+        return "User " + self.author.get_username() + " liked " + self.object.get_name_for_event()
+
+    def is_tracked(self):
+        # TODO: add a condition when we create an event on this action
+        return True
 
 
 class LikeAble(models.Model):
     likes = GenericRelation(Like, object_id_field='object_id', content_type_field='content_type')
     likes_count = models.IntegerField(default=0)
+
+    def get_title_for_like(self):
+        raise NotImplementedError
 
     class Meta:
         abstract = True

@@ -27,12 +27,14 @@ def like_pre_delete(instance, *args, **kwargs):
     instance.object.save()
 
 
-@receiver(post_save, sender=WatchableModel)
 def watchable_object_post_save(instance, created, *args, **kwargs):
     if instance.is_tracked():
         # we create new event on each object edit
         add_event_for_object(instance, created=created)
 
+
+for model in WatchableModel.__subclasses__():
+    post_save.connect(watchable_object_post_save, model)
 
 for model in ModelWithAuthor.__subclasses__():
     post_save.connect(model_with_author_post_save, model)
