@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'comment.apps.CommentConfig',
     'event.apps.EventConfig',
     'post.apps.PostConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
