@@ -1,7 +1,9 @@
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
-from core.models import WatchableModel
+from application import settings
+from core.models import WatchableModel, User
 from event.models import add_event_for_object
 from .models import ModelWithAuthor, Like
 
@@ -32,6 +34,15 @@ def watchable_object_post_save(instance, created, *args, **kwargs):
         # we create new event on each object edit
         add_event_for_object(instance, created=created)
 
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
+for user in User.objects.all():
+    Token.objects.get_or_create(user=user)
 
 for model in WatchableModel.__subclasses__():
     post_save.connect(watchable_object_post_save, model)

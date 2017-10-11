@@ -114,7 +114,7 @@ class Like(ModelWithDates, ModelWithAuthor, WatchableModel):
         return EVENT_LIKE
 
     def get_title_for_event(self, eventtype):
-        return "User " + self.author.get_username() + " liked " + self.object.get_name_for_event()
+        return "User " + self.author.get_username() + " liked " + self.object.get_title_for_event()
 
     def is_tracked(self):
         # TODO: add a condition when we create an event on this action

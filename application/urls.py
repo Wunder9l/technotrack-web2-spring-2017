@@ -16,15 +16,26 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
+from django.contrib.auth import views as auth_views
 from rest_framework import routers
-from core.api.v1.views import LikeViewSet
+from rest_framework.authtoken import views as rest_authtoken_views
+from core.api.v1.views import LikeViewSet, UserViewSet
+from post.api.v1.views import PostViewSet
+from event.api.v1.views import EventReadOnlyViewSet
 
 router = routers.DefaultRouter()
 router.register(r'likes', LikeViewSet)
+router.register(r'users', UserViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'events', EventReadOnlyViewSet)
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^login/$', auth_views.login, name='login'),
+    url(r'^logout/$', auth_views.logout, name='logout'),
+    url(r'^social/', include('social_django.urls', namespace='social')),
+    url(r'^api-token-auth/', rest_authtoken_views.obtain_auth_token)
 ]
 
 if settings.DEBUG:
