@@ -135,8 +135,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'STATIC_ROOT')))
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'MEDIA_ROOT')))
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',
@@ -147,5 +149,6 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = config.get('vk_oauth2', 'KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = config.get('vk_oauth2', 'SECRET')
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'photos']
 
 LOGIN_REDIRECT_URL = '/api/v1/'

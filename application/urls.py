@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import views as auth_views
+from core.views import root_page
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_authtoken_views
 from core.api.v1.views import LikeViewSet, UserViewSet
@@ -30,6 +31,8 @@ router.register(r'posts', PostViewSet)
 router.register(r'events', EventReadOnlyViewSet)
 
 urlpatterns = [
+    url(r'^$', root_page),
+
     url(r'^api/v1/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', auth_views.login, name='login'),

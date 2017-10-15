@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework import viewsets
 
 
@@ -10,3 +11,6 @@ class MultiSerializerViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return self.serializers.get(self.action,
                                     self.serializers['default'])
+
+def root_page(request):
+    return render(request, template_name='core/index.html')
