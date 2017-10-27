@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'post.apps.PostConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
     'social_django',
+    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static_assets'),
+)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'STATIC_ROOT')))
 MEDIA_URL = '/media/'
@@ -152,3 +157,14 @@ SOCIAL_AUTH_VK_OAUTH2_SECRET = config.get('vk_oauth2', 'SECRET')
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'photos']
 
 LOGIN_REDIRECT_URL = '/api/v1/'
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'webpack-bundles/',  # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}

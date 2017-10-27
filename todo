@@ -1,0 +1,13 @@
+DJANGO:
+сериалайзеры - пользователя и пр
+сериалайзеры: aggregate в get_queryset
+api: разные бэкэнда (full, brief, etc), user
+api - подписаться на кого-либо - relationship
+DONE api: registration/login/logout => rest_auth
+css
+
+
+redux-addons-middleware
+
+material-ui.com - наборы компонентов
+grommet.io - layout + components

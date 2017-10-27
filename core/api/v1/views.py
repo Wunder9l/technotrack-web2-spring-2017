@@ -1,19 +1,25 @@
+from django.contrib.auth import password_validation
 from django.core.exceptions import FieldError
 from django.http import Http404
+from django.shortcuts import render
+from rest_framework import serializers, status
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from core.views import MultiSerializerViewSet
-from .serializers import LikeSerializer, UserListSerializer, UserDetailSerializer
+from .serializers import LikeSerializer, UserListSerializer, UserDetailSerializer, UserSelfSerializer, \
+    PasswordSerializer
 from core.models import Like, User
-from  core.permissions import IsOwnerOrReadOnly
+from  core.permissions import IsOwnerOrAdminOrReadOnly
 
 
 class LikeViewSet(ModelViewSet):
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
 
     def get_queryset(self):
         qs = super(LikeViewSet, self).get_queryset()
@@ -23,6 +29,39 @@ class LikeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class UserSelfViewSet(ModelViewSet):
+    model = User
+    serializer_class = UserSelfSerializer
+    permission_classes = IsAuthenticated, IsOwnerOrAdminOrReadOnly
+    queryset = User.objects.all()
+
+    def get_queryset(self):
+        return [self.request.user, ]
+
+    @list_route(methods=['post'], permission_classes=[IsAuthenticated, IsOwnerOrAdminOrReadOnly])
+    def set_password(self, request):
+        # user = self.get_object()
+        user = request.user
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            new_password = serializer.validated_data['new_password']
+            # TODO: check if old_password is belongs to user
+            old_password = serializer.validated_data["old_password"]
+            if not user.check_password(old_password):
+                raise serializers.ValidationError("Old password field is not valid")
+            else:
+                if old_password == new_password:
+                    raise serializers.ValidationError("New password is equal to old password")
+                else:
+                    password_validation.validate_password(new_password, request.user)
+                    user.set_password(new_password)
+                    user.save()
+                    return Response({'status': 'password changed'})
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(MultiSerializerViewSet):

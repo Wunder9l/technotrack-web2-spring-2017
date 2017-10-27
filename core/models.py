@@ -130,3 +130,8 @@ class LikeAble(models.Model):
 
     class Meta:
         abstract = True
+
+
+class LikeAbleNotAbstract(LikeAble):
+    class Meta:
+        abstract = False

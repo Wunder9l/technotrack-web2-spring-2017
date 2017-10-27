@@ -1,13 +1,13 @@
 from rest_framework.viewsets import ModelViewSet
 
-from  core.permissions import IsOwnerOrReadOnly
+from  core.permissions import IsOwnerOrAdminOrReadOnly
 from .serializers import PostSerializer, Post
 
 
 class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrAdminOrReadOnly,)
 
     def get_queryset(self):
         qs = super(PostViewSet, self).get_queryset()

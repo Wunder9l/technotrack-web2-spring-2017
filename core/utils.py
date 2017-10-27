@@ -1,4 +1,5 @@
 import os
+import re
 import uuid
 
 
@@ -18,6 +19,27 @@ def image_save_path(instance, filename):
 
 def post_title_image_save_path(instance, filename):
     return image_save_path(instance, 'title_image' + os.path.splitext(filename)[1])
+
+
+def get_class_as_string(obj):
+    type_str = str(obj.__class__)
+    return type_str[type_str.find("'") + 1:type_str.rfind("'")]
+
+
+def check_password_to_satisfy_requirements(password):
+    if password:
+        if len(password) >= 8:
+            if bool(re.search(r'\d', password)):
+                if bool(re.search(r'[a-zA-Z]', password)):
+                    return ""
+                else:
+                    return "Password should contain at least 1 letter"
+            else:
+                return "Password should contain at least 1 digit"
+        else:
+            return "Password should be at least 8 symbols"
+    else:
+        return "Password cannot be empty"
 
 
 class Enum:

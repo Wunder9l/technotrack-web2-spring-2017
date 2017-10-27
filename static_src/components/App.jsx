@@ -1,12 +1,20 @@
 import React from 'react';
+import EventList from './event/EventList';
+import LikeList from './like/LikeList';
+import CommentListEditable from './comment/CommentListEditable';
 
-let greetingString = 'Hello!';
+const injectTapEventPlugin = require('react-tap-event-plugin');
 
-class App extends React.component {
+injectTapEventPlugin();
+
+class App extends React.Component {
 
     render() {
         return (
-            <div>{greetingString} Hello world</div>
+            <CommentListEditable/>
+            // <LikeList/>
+
+            // <EventList/>
         );
     }
 }

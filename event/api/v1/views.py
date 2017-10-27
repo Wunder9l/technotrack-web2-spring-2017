@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from  core.permissions import IsOwnerOrReadOnly
+from  core.permissions import IsOwnerOrAdminOrReadOnly
 from .serializers import Event, EventSerializer
 
 

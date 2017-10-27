@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 const webpack = require('webpack');
-
+// const path = require('path');
+const BundleTracker = require('webpack-bundle-tracker');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
@@ -18,10 +19,11 @@ module.exports = {
     context: `${__dirname}/static_src`,
 
     output: {
-        path: `${__dirname}/static/build/`,
+        // path: path.join(__dirname, '../'),
+        path: `${__dirname}/static_assets/webpack-bundles/`,
         filename: NODE_ENV === 'development' ? '[name].js' : '[name]-[hash].js',
-        publicPath: '/static/build/',
-        library: '[name]',
+        // publicPath: '/static_assets/build/',
+        // library: '[name]',
     },
 
     watch: NODE_ENV === 'development',
@@ -31,11 +33,15 @@ module.exports = {
 
     module:
         {
+            // loaders: [
+            //     // we pass the output from babel loader to react-hot loader
+            //     {test:  /\.(js|jsx)$/, include: `${__dirname}/static_src`, loaders: ['react-hot', 'babel'], },
+            // ]
             rules: [
                 {
                     test: /\.(js|jsx)$/,
                     include: `${__dirname}/static_src`,
-                    loader: 'babel-loader?presets[]=react&presets[]=es2015',
+                    loader: 'babel-loader?presets[]=react&presets[]=es2015&presets[]=stage-1',
                 },
                 {
                     test: /\.css$/,
@@ -53,6 +59,7 @@ module.exports = {
 
     plugins:
         [
+            new BundleTracker({filename: './webpack-stats.json'}),
             new webpack.NoEmitOnErrorsPlugin(),
         ],
 }

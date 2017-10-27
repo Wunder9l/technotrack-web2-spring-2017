@@ -3,30 +3,51 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from core.models import Like, User
-from core.serializers import ModelWithAuthorSerializer
+from core.serializers import UserBriefSerializer, LikeAbleObjectSerializer
+from core.utils import check_password_to_satisfy_requirements
 
 
 class LikeSerializer(ModelSerializer):
-    object = serializers.ReadOnlyField(source='object.get_title_for_like', read_only=True)
-    # object_id = serializers.IntegerField(source='object_id', read_only=False)
+    object = LikeAbleObjectSerializer(read_only=True, required=False)
     content_type_as_string = serializers.SerializerMethodField(read_only=True)
     content_type = serializers.PrimaryKeyRelatedField(queryset=ContentType.objects.all(), many=False)
-    author = serializers.ReadOnlyField(source='author.id')
-    author_username = serializers.ReadOnlyField(source='author.username')
+    author = UserBriefSerializer(read_only=True, required=False)
 
     class Meta:
         model = Like
-        fields = '__all__'
-        # fields = 'author', 'object', 'object_id', "content_type", 'content_type_as_string', 'created', 'updated',
-        read_only_fields = 'author', 'author_username', 'object', 'id', 'created', 'updated', 'content_type_as_string',
+        # fields = '__all__'
+        fields = 'id', 'author', 'object', 'object_id', "content_type", 'content_type_as_string', 'created', 'updated',
+        read_only_fields = 'author', 'object', 'id', 'created', 'updated', 'content_type_as_string',
 
     def get_content_type_as_string(self, like_object):
         type_str = str(like_object.object.__class__)
         return type_str[type_str.find("'") + 1:type_str.rfind("'")]
         #
 
-    def save(self, **kwargs):
-        super(LikeSerializer, self).save(**kwargs)
+
+class PasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(max_length=50, required=True)
+    new_password = serializers.CharField(max_length=50, required=True)
+
+    def validate(self, data):
+        if data['old_password']:
+            new_password_check_errors = check_password_to_satisfy_requirements(data['new_password'])
+            if new_password_check_errors:
+                raise serializers.ValidationError("Error on new_password: " + new_password_check_errors)
+            else:
+                return data
+        else:
+            raise serializers.ValidationError("Error on old_password: Field cannot be empty")
+
+
+class UserSelfSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # fields = '__all__'
+        read_only_fields = 'last_login', 'date_joined', 'objects_count', 'user_permissions', \
+                           'is_active', 'is_staff', 'is_superuser'
+        exclude = 'password',
+        # extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserListSerializer(serializers.ModelSerializer):

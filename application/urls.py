@@ -20,20 +20,24 @@ from django.contrib.auth import views as auth_views
 from core.views import root_page
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_authtoken_views
-from core.api.v1.views import LikeViewSet, UserViewSet
+from core.api.v1.views import LikeViewSet, UserViewSet, UserSelfViewSet
 from post.api.v1.views import PostViewSet
 from event.api.v1.views import EventReadOnlyViewSet
+from comment.api.v1.views import CommentViewSet
 
 router = routers.DefaultRouter()
 router.register(r'likes', LikeViewSet)
 router.register(r'users', UserViewSet)
+router.register(r'me', UserSelfViewSet)
 router.register(r'posts', PostViewSet)
 router.register(r'events', EventReadOnlyViewSet)
+router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
     url(r'^$', root_page),
 
-    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v1/', include(router.urls, namespace='api')),
+    url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
