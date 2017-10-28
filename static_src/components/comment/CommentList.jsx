@@ -26,9 +26,9 @@ class CommentList extends React.Component {
             return <div className="comments-list">Loading...</div>;
         }
         const likeObjects = this.props.commentList.map(
-            item => <Comment key={item.id} object={item.object} author={item.author} updated={item.updated}
-                             text={item.text}/>
-        );
+            item => <Comment key={item.id} {...item} />
+            )
+        ;
         // console.log(this.state);
 
         return (

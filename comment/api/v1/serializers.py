@@ -8,16 +8,10 @@ from core.utils import get_class_as_string
 
 
 class CommentSerializer(ModelSerializer):
-    author = UserBriefSerializer(read_only=True, required=False)
-    object = LikeAbleObjectSerializer(read_only=True, required=False)
-    content_type_as_string = serializers.SerializerMethodField(read_only=True)
-    content_type = serializers.PrimaryKeyRelatedField(queryset=ContentType.objects.all(), many=False)
-
     class Meta:
         model = Comment
-        # fields = '__all__'
-        fields = 'id', 'author', 'object', 'object_id', "content_type", 'content_type_as_string', 'text', 'created', 'updated',
-        read_only_fields = 'author', 'id', 'object', 'created', 'updated', 'content_type_as_string',
+        fields = 'id', 'author', 'object_id', "content_type", 'text', 'updated',  # 'created',
+        read_only_fields = 'author', 'id', 'updated',  # 'created',
 
     def get_content_type_as_string(self, object):
         return get_class_as_string(object.object)

@@ -1,3 +1,5 @@
-// import
+import commentsReducer from './components/CommentReducer';
 
-export default [];
+export default {
+    comments: commentsReducer,
+};

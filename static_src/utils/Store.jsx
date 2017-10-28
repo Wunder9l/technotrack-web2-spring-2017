@@ -1,13 +1,17 @@
-import {createStore, applyMiddleware, compose} from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import {combineReducers, createStore, applyMiddleware, compose} from 'redux';
 import reducers from '../reducers';
 import middlewares from '../middlewares';
 
 
-function initStore(additionalMiddlewares = []) {
+export default function initStore(additionalMiddlewares = []) {
+    const reducer = combineReducers(reducers);
     const initialStore = {};
     return createStore(
-        reducers,
+        reducer,
         initialStore,
-        compose(applyMiddleware(...additionalMiddlewares, ...middlewares)),
+        composeWithDevTools(
+            applyMiddleware(...additionalMiddlewares, ...middlewares)
+        ),
     );
 }

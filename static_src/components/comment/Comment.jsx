@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 
 class Comment extends React.Component {
     static propTypes = {
-        object: PropTypes.shape({
-            id: PropTypes.number,
-            title: PropTypes.string,
-        }).isRequired,
-        author: PropTypes.shape({
-            id: PropTypes.number,
-            username: PropTypes.string,
-        }).isRequired,
-        updated: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        object_id: PropTypes.number.isRequired,
+        content_type: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        author: PropTypes.number,
+        username: PropTypes.string,
         text: PropTypes.string.isRequired,
+        updated: PropTypes.string.isRequired,
     };
-    static defaultProps = {};
+    static
+    defaultProps = {};
 
     render() {
         return (
