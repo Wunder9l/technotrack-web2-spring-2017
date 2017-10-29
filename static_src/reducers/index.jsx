@@ -1,5 +1,12 @@
-import commentsReducer from './components/CommentReducer';
+import {combineReducers} from 'redux-immutable';
+import comments from './components/CommentReducer';
 
-export default {
-    comments: commentsReducer,
-};
+const test = (store, action) => {
+    console.log('test:', store, typeof (store));
+    return store;
+}
+
+export default combineReducers(
+    {
+        comments,
+    });

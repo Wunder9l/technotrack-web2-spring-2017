@@ -10,7 +10,7 @@ import {loadComments} from '../../actions/components/Comment';
 class CommentList extends React.Component {
 
     static propTypes = {
-        commentList: PropTypes.arrayOf(PropTypes.shape(Comment.propTypes)).isRequired,
+        commentList: PropTypes.arrayOf(PropTypes.number).isRequired,
         isLoading: PropTypes.bool.isRequired,
         loadComments: PropTypes.func.isRequired,
     };
@@ -25,23 +25,20 @@ class CommentList extends React.Component {
         if (this.props.isLoading) {
             return <div className="comments-list">Loading...</div>;
         }
-        const likeObjects = this.props.commentList.map(
-            item => <Comment key={item.id} {...item} />
-            )
-        ;
+        // const likeObjects = this.props.commentList.map(
+        //     item => <Comment key={item.id} {...item} />
+        //     )
+        // ;
         // console.log(this.state);
 
-        return (
-
-            <div className="comments-list">
-                {likeObjects}
-            </div>
-        );
+        return <div>Nothing</div>;
     }
 }
 
 
-const mapStoreToProps = ({comments}) => {
+const mapStoreToProps = (store) => {
+    const comments = store.get('comments');
+    console.log('comments', comments);
     return {
         commentList: comments.commentList,
         isLoading: comments.isLoading,
@@ -49,7 +46,8 @@ const mapStoreToProps = ({comments}) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators(loadComments, dispatch);
+    // return {};
+    return bindActionCreators({loadComments}, dispatch);
 };
 
 export default connect(mapStoreToProps, mapDispatchToProps)(CommentList);

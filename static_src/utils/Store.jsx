@@ -1,17 +1,23 @@
-import { composeWithDevTools } from 'redux-devtools-extension';
-import {combineReducers, createStore, applyMiddleware, compose} from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import {fromJS, Map} from 'immutable';
+import {createStore, applyMiddleware} from 'redux';
 import reducers from '../reducers';
 import middlewares from '../middlewares';
 
 
 export default function initStore(additionalMiddlewares = []) {
-    const reducer = combineReducers(reducers);
-    const initialStore = {};
+    const initialStore = Map({
+        comments: {
+            commentList: [],
+            isLoading: false,
+        },
+    });
+    console.log("INIT:", typeof (initialStore));
     return createStore(
-        reducer,
+        reducers,
         initialStore,
         composeWithDevTools(
-            applyMiddleware(...additionalMiddlewares, ...middlewares)
+            applyMiddleware(...additionalMiddlewares, ...middlewares),
         ),
     );
 }

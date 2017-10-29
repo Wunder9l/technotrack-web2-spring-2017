@@ -35,15 +35,18 @@
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.24.1",
+    "immutable": "^3.8.2",
     "material-ui": "^0.19.4",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
+    "react-addons-update": "^15.6.2",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-tap-event-plugin": "^3.0.2",
     "redux": "^3.7.2",
     "redux-api-middleware": "^2.0.0-beta.3",
     "redux-devtools-extension": "^2.13.2",
+    "redux-immutable": "^4.0.0",
     "zepto-browserify": "^1.1.6-1"
   }
 }

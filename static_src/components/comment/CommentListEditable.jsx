@@ -29,9 +29,8 @@ class CommentListEditable extends React.Component {
         return (
             <div>
                 <CommentForm onCreate={this.onCommentCreate}/>
-                <p>
-                    <CommentList isLoading={this.state.isLoading} commentList={this.state.commentList}/>
-                </p>
+                <p/>
+                <CommentList isLoading={this.state.isLoading} commentList={this.state.commentList}/>
             </div>
         );
     }

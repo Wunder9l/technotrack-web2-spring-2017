@@ -1,16 +1,16 @@
-import {Map, List, fromJS} from 'immutable';
+import {update} from 'react-addons-update';
 import {
     ERROR_COMMENT_LOADING,
     SUCCESSFUL_COMMENT_LOADING,
     START_COMMENT_LOADING,
 } from '../../actions/components/Comment';
 
-const initialState = fromJS({
+const initialState = {
     comments: {
         commentList: [],
         isLoading: false,
     },
-});
+};
 
 
 const reducer = (store = initialState, action) => {
