@@ -3,6 +3,7 @@ import {
     ERROR_COMMENT_LOADING,
     SUCCESSFUL_COMMENT_LOADING,
     START_COMMENT_LOADING,
+    ADD_COMMENT,
 } from '../../actions/components/Comment';
 
 const initialState = fromJS({
@@ -26,6 +27,10 @@ const reducer = (store = initialState, action) => {
         case ERROR_COMMENT_LOADING: {
             console.log('ERROR', action);
             return store.set('isLoading', true);
+        }
+        case ADD_COMMENT: {
+            // return store.set('isLoading', true);
+            return store;
         }
         default:
             return store;

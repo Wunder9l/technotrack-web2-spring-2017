@@ -5,12 +5,14 @@ import {connect} from 'react-redux';
 import Comment from './Comment';
 import apiUrls from '../ApiUrls';
 import {loadComments} from '../../actions/components/Comment';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader'
 
 
 class CommentList extends React.Component {
 
     static propTypes = {
-        commentList: PropTypes.arrayOf(PropTypes.number).isRequired,
+        commentList: PropTypes.arrayOf(PropTypes.shape(Comment.propTypes)).isRequired,
         isLoading: PropTypes.bool.isRequired,
         loadComments: PropTypes.func.isRequired,
     };
@@ -25,19 +27,26 @@ class CommentList extends React.Component {
         if (this.props.isLoading) {
             return <div className="comments-list">Loading...</div>;
         }
-        // const likeObjects = this.props.commentList.map(
-        //     item => <Comment key={item.id} {...item} />
-        //     )
-        // ;
-        // console.log(this.state);
+        const comments = this.props.commentList.map(
+            item => <Comment key={item.id} {...item} />
+        );
 
-        return <div>Nothing</div>;
+        return (
+
+            <div className="event-list">
+                <List>
+                    <Subheader>Comments</Subheader>
+                    {comments}
+                </List>
+            </div>
+        );
+        // return <div>Nothing</div>;
     }
 }
 
 
-const mapStoreToProps = (store) => {
-    const comments = store.get('comments');
+const mapStoreToProps = ({comments}) => {
+    // const comments = store.get('comments');
     console.log('comments', comments);
     return {
         commentList: comments.commentList,

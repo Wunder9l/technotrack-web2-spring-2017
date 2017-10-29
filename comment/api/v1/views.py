@@ -10,7 +10,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # @ensure_csrf_cookie
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().select_related('author')
     permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
 
     def get_queryset(self):

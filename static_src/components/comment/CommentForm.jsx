@@ -1,19 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DjangoCSRFToken from '../DjangoCSRFToken';
-// import DjangoCSRFToken from 'django-react-csrftoken';
+import {bindActionCreators} from 'redux';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import {connect} from 'react-redux';
 import apiUrls from '../ApiUrls';
+import {addComment} from '../../actions/components/Comment';
+import {getCsrfToken} from '../../utils/Helpers';
 
 class CommentForm extends React.Component {
     state = {
         text: '',
         content_type: '',
         object_id: '',
+        addComment: PropTypes.func.isRequired,
+
     };
 
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     };
+
+    clearForm = () => {
+        this.setState({
+            text: '',
+            content_type: '',
+            object_id: '',
+        });
+    }
 
     onSubmit = (e) => {
         // const csrftoken = Cookies.get('csrftoken');
@@ -23,8 +37,7 @@ class CommentForm extends React.Component {
         fetch(apiUrls.commentList, {
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': document.cookie.match(/csrftoken=([^ ;]+)/)[1],
-                // 'X-Requested-With': 'XMLHttpRequest'
+                'X-CSRFToken': getCsrfToken(),
             },
             method: 'POST',
             credentials: 'include',
@@ -33,10 +46,13 @@ class CommentForm extends React.Component {
             body => body.json(),
         ).then(
             (json) => {
-                // console.log(e);
-                // console.log(json);
-                this.props.onCreate(json);
+                this.props.addComment(json);
+                this.clearForm();
             });
+    };
+
+    isSubmitEnabled = () => {
+        return this.state.text.length === 0;
     };
 
     render() {
@@ -54,11 +70,18 @@ class CommentForm extends React.Component {
                         <input name="object_id" onChange={this.onChange} type="number" value={this.state.object_id}/>
                     </div>
                     <div className="comment-form-text">
-                        <i>Text:</i>
-                        <textarea name="text" onChange={this.onChange} value={this.state.text}/>
+                        <TextField
+                            hintText="Enter comment text"
+                            multiLine={true}
+                            rows={2}
+                            rowsMax={4}
+                            name="text" onChange={this.onChange} value={this.state.text}
+                        />
+                        {/*<i>Text:</i>*/}
+                        {/*<textarea/>*/}
                     </div>
                     <div className="comment-form-submit">
-                        <button onClick={this.onSubmit}>Submit</button>
+                        <RaisedButton disabled={this.isSubmitEnabled()} label="Submit" primary={true} onClick={this.onSubmit}/>
                     </div>
                 </form>
             </div>
@@ -66,4 +89,19 @@ class CommentForm extends React.Component {
     }
 }
 
-export default CommentForm;
+
+const mapStoreToProps = ({comments}) => {
+    // const comments = store.get('comments');
+    console.log('comments', comments);
+    return {
+        commentList: comments.commentList,
+        isLoading: comments.isLoading,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    // return {};
+    return bindActionCreators({addComment}, dispatch);
+};
+
+export default connect(mapStoreToProps, mapDispatchToProps)(CommentForm);

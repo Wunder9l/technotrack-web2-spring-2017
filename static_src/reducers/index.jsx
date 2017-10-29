@@ -1,10 +1,7 @@
-import {combineReducers} from 'redux-immutable';
-import comments from './components/CommentReducer';
-
-const test = (store, action) => {
-    console.log('test:', store, typeof (store));
-    return store;
-}
+// import {combineReducers} from 'redux-immutable';
+import {combineReducers} from 'redux';
+// import comments from './components/CommentReducer';
+import comments from './components/CommentReducerSimple';
 
 export default combineReducers(
     {

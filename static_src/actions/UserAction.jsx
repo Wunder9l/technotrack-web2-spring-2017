@@ -6,7 +6,7 @@ export const ERROR_COMMENT_LOADING = 'ERROR_COMMENT_LOADING';
 export const ADD_COMMENT = 'ADD_COMMENT';
 
 
-export const loadComments = (url) => {
+export const updateUsersListComments = (url) => {
     return {
         [CALL_API]: {
             credentials: 'include',
@@ -14,19 +14,5 @@ export const loadComments = (url) => {
             method: 'GET',
             types: [START_COMMENT_LOADING, SUCCESSFUL_COMMENT_LOADING, ERROR_COMMENT_LOADING],
         },
-    };
-};
-
-export const addComment = (comment) => {
-    return {
-        type: ADD_COMMENT,
-        payload: comment,
-    };
-};
-
-export const successfulCommentLoading = (tasks) => {
-    return {
-        type: START_COMMENT_LOADING,
-        payload: tasks,
     };
 };

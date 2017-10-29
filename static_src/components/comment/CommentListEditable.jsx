@@ -6,31 +6,12 @@ import apiUrls from '../ApiUrls';
 
 class CommentListEditable extends React.Component {
 
-    state = {commentList: [], isLoading: true};
-
-    //
-    componentDidMount() {
-        fetch(apiUrls.commentList, {credentials: 'include'}
-        ).then(
-            (body) => body.json(),
-        ).then(
-            (json) => this.setState({commentList: json, isLoading: false}),
-            // (json) => console.log(json),
-        );
-    }
-
-    onCommentCreate = (comment) => {
-        this.setState({
-            commentList: [comment, ...this.state.commentList],
-        });
-    }
-
     render() {
         return (
             <div>
-                <CommentForm onCreate={this.onCommentCreate}/>
+                <CommentForm/>
                 <p/>
-                <CommentList isLoading={this.state.isLoading} commentList={this.state.commentList}/>
+                <CommentList/>
             </div>
         );
     }

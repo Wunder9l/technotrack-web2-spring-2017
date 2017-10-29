@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 
 class Comment extends React.Component {
     static propTypes = {
         id: PropTypes.number.isRequired,
         object_id: PropTypes.number.isRequired,
         content_type: PropTypes.number.isRequired,
-        title: PropTypes.string.isRequired,
         author: PropTypes.number,
-        username: PropTypes.string,
+        author_name: PropTypes.string.isRequired,
         text: PropTypes.string.isRequired,
         updated: PropTypes.string.isRequired,
     };
@@ -17,20 +18,10 @@ class Comment extends React.Component {
 
     render() {
         return (
-            <div className="comment-item">
-                <div className="comment-item-author">
-                    <b>Author: {this.props.author.username}, </b>
-                </div>
-                <div className="comment-item-updated-date">
-                    <i>{this.props.updated}</i>
-                </div>
-                <div className="comment-item-object">
-                    Object: {this.props.object.title}
-                </div>
-                <div className="comment-item-text">
-                    <p><i>{this.props.text}</i></p>
-                </div>
-            </div>
+            < ListItem primaryText={<p>{this.props.author_name}, {this.props.updated}</p>}
+                       secondaryText={<p>{this.props.text}</p>} secondaryTextLines={2}>
+                <Divider/>
+            </ListItem>
         );
     }
 }
