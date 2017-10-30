@@ -45,12 +45,14 @@ class CommentList extends React.Component {
 }
 
 
-const mapStoreToProps = ({comments}) => {
-    // const comments = store.get('comments');
-    console.log('comments', comments);
+const mapStoreToProps = (store) => {
+    // console.log("STORE!!!",store);
+    const comments = store.get('comments');
+    // console.log('comments', comments);
+    //
     return {
-        commentList: comments.commentList,
-        isLoading: comments.isLoading,
+        commentList: comments.get('commentList'),
+        isLoading: comments.get('isLoading'),
     };
 };
 

@@ -9,7 +9,7 @@ class CommentListEditable extends React.Component {
     render() {
         return (
             <div>
-                <CommentForm/>
+                {/*<CommentForm/>*/}
                 <p/>
                 <CommentList/>
             </div>

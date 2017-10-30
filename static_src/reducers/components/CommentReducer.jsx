@@ -6,19 +6,21 @@ import {
     ADD_COMMENT,
 } from '../../actions/components/Comment';
 
-const initialState = fromJS({
-    comments: {
-        commentList: [],
-        isLoading: false,
-    },
+const initialState = Map({
+    commentList: [],
+    isLoading: false,
 });
 
 
 const reducer = (store = initialState, action) => {
     console.log(action, store);
     // return store;
+    let smth = fromJS(store);
     switch (action.type) {
         case START_COMMENT_LOADING: {
+            console.log(store);
+            // debugger;
+            return smth.set('isLoading', true);
             return store.set('isLoading', true);
         }
         case SUCCESSFUL_COMMENT_LOADING: {
