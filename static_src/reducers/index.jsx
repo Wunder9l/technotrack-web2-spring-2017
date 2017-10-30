@@ -1,7 +1,5 @@
-// import {combineReducers} from 'redux-immutable';
-import {combineReducers} from 'redux';
-// import comments from './components/CommentReducer';
-import comments from './components/CommentReducerSimple';
+import {combineReducers} from 'redux-immutable';
+import comments from './components/CommentReducer';
 
 export default combineReducers(
     {

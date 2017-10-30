@@ -12,12 +12,7 @@ const initialState = {
         isLoading: false,
     },
 };
-// const initialState = Map({
-//     comments: {
-//         commentList: [],
-//         isLoading: false,
-//     },
-// });
+
 
 const reducer = (store = initialState, action) => {
     console.log(action, store);

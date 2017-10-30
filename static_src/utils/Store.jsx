@@ -6,18 +6,12 @@ import middlewares from '../middlewares';
 
 
 export default function initStore(additionalMiddlewares = []) {
-    const initialStore = {
+    const initialStore = Map({
         comments: {
             commentList: [],
             isLoading: false,
         },
-    };
-    // const initialStore = Map({
-    //     comments: {
-    //         commentList: [],
-    //         isLoading: false,
-    //     },
-    // });
+    });
     return createStore(
         reducers,
         initialStore,

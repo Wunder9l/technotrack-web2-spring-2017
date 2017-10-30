@@ -19,7 +19,7 @@ const reducer = (store = initialState, action) => {
     // return store;
     switch (action.type) {
         case START_COMMENT_LOADING: {
-            return fromJS(store).set('isLoading', true);
+            return store.set('isLoading', true);
         }
         case SUCCESSFUL_COMMENT_LOADING: {
             return store.merge(Map({isLoading: false, commentList: action.payload}));
