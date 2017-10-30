@@ -12,6 +12,12 @@ export default function initStore(additionalMiddlewares = []) {
             isLoading: false,
         },
     };
+    // const initialStore = Map({
+    //     comments: {
+    //         commentList: [],
+    //         isLoading: false,
+    //     },
+    // });
     return createStore(
         reducers,
         initialStore,
