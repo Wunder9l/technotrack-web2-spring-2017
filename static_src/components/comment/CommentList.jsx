@@ -12,7 +12,7 @@ import Subheader from 'material-ui/Subheader'
 class CommentList extends React.Component {
 
     static propTypes = {
-        commentList: PropTypes.arrayOf(PropTypes.shape(Comment.propTypes)).isRequired,
+        commentList: PropTypes.object.isRequired,
         isLoading: PropTypes.bool.isRequired,
         loadComments: PropTypes.func.isRequired,
     };
@@ -27,10 +27,11 @@ class CommentList extends React.Component {
         if (this.props.isLoading) {
             return <div className="comments-list">Loading...</div>;
         }
-        const comments = this.props.commentList.map(
-            item => <Comment key={item.id} {...item} />
+        const comments = Array();
+        this.props.commentList.forEach(
+            item => comments.push(<Comment key={item.id} {...item} />)
         );
-
+        // debugger;
         return (
 
             <div className="event-list">
@@ -46,10 +47,8 @@ class CommentList extends React.Component {
 
 
 const mapStoreToProps = (store) => {
-    // console.log("STORE!!!",store);
     const comments = store.get('comments');
-    // console.log('comments', comments);
-    //
+    // console.log("CommentList", comments);
     return {
         commentList: comments.get('commentList'),
         isLoading: comments.get('isLoading'),

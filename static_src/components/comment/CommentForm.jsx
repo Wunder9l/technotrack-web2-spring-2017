@@ -13,8 +13,10 @@ class CommentForm extends React.Component {
         text: '',
         content_type: '',
         object_id: '',
-        addComment: PropTypes.func.isRequired,
 
+    };
+    static propTypes = {
+        addComment: PropTypes.func.isRequired,
     };
 
     onChange = (e) => {
@@ -30,10 +32,9 @@ class CommentForm extends React.Component {
     }
 
     onSubmit = (e) => {
-        // const csrftoken = Cookies.get('csrftoken');
         e.preventDefault();
-        console.log(JSON.stringify(this.state));
-        console.log(apiUrls.commentList);
+        // console.log(JSON.stringify(this.state));
+        // console.log(apiUrls.commentList);
         fetch(apiUrls.commentList, {
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +82,8 @@ class CommentForm extends React.Component {
                         {/*<textarea/>*/}
                     </div>
                     <div className="comment-form-submit">
-                        <RaisedButton disabled={this.isSubmitEnabled()} label="Submit" primary={true} onClick={this.onSubmit}/>
+                        <RaisedButton disabled={this.isSubmitEnabled()} label="Submit" primary={true}
+                                      onClick={this.onSubmit}/>
                     </div>
                 </form>
             </div>
@@ -90,12 +92,11 @@ class CommentForm extends React.Component {
 }
 
 
-const mapStoreToProps = ({comments}) => {
+const mapStoreToProps = (store) => {
     // const comments = store.get('comments');
-    console.log('comments', comments);
     return {
-        commentList: comments.commentList,
-        isLoading: comments.isLoading,
+        // commentList: comments.get('commentList'),
+        // isLoading: comments.get('isLoading'),
     };
 };
 

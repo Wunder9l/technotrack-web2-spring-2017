@@ -7,32 +7,30 @@ import {
 } from '../../actions/components/Comment';
 
 const initialState = Map({
-    commentList: [],
+    commentList: List(),
     isLoading: false,
 });
 
 
 const reducer = (store = initialState, action) => {
     console.log(action, store);
-    // return store;
-    let smth = fromJS(store);
     switch (action.type) {
         case START_COMMENT_LOADING: {
             console.log(store);
             // debugger;
-            return smth.set('isLoading', true);
             return store.set('isLoading', true);
         }
         case SUCCESSFUL_COMMENT_LOADING: {
-            return store.merge(Map({isLoading: false, commentList: action.payload}));
+            return store.merge(Map({isLoading: false, commentList: List(action.payload)}));
         }
         case ERROR_COMMENT_LOADING: {
             console.log('ERROR', action);
             return store.set('isLoading', true);
         }
         case ADD_COMMENT: {
-            // return store.set('isLoading', true);
-            return store;
+            return store.update('commentList', list => list.insert(0, action.payload));
+            // store.set('isLoading', false);
+            // return store;
         }
         default:
             return store;
