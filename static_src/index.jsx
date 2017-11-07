@@ -8,6 +8,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 import createHistory from 'history/createBrowserHistory';
 import {routerMiddleware, ConnectedRouter} from 'react-router-redux';
+// import {GridContainer, GridItem} from 'react-css-grid-layout';
 import App from './components/App';
 import initStore from './utils/Store';
 

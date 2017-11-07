@@ -138,12 +138,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static_assets'),
+    os.path.join(os.path.join(BASE_DIR, os.pardir), 'static_assets'),
 )
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'STATIC_ROOT')))
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'MEDIA_ROOT')))
+
+EMAIL_PORT = config.get('main', 'EMAIL_PORT')
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',

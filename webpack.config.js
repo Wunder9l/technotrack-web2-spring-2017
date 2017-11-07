@@ -20,7 +20,7 @@ module.exports = {
 
     output: {
         // path: path.join(__dirname, '../'),
-        path: `${__dirname}/static_assets/webpack-bundles/`,
+        path: `${__dirname}/../static_assets/webpack-bundles/`,
         filename: NODE_ENV === 'development' ? '[name].js' : '[name]-[hash].js',
         // publicPath: '/static_assets/build/',
         // library: '[name]',

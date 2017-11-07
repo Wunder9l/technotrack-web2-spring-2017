@@ -34,15 +34,17 @@ router.register(r'events', EventReadOnlyViewSet)
 router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
-    url(r'^$', root_page),
-
     url(r'^api/v1/', include(router.urls, namespace='api')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^social/', include('social_django.urls', namespace='social')),
-    url(r'^api-token-auth/', rest_authtoken_views.obtain_auth_token)
+    url(r'^api-token-auth/', rest_authtoken_views.obtain_auth_token),
+
+    url(r'^$', root_page),
+    url(r'^post/$', root_page),
+
 ]
 
 if settings.DEBUG:

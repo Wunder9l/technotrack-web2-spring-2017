@@ -6,7 +6,9 @@ from application import settings
 from core.models import WatchableModel, User
 from event.models import add_event_for_object
 from .models import ModelWithAuthor, Like
+from django.db import transaction
 
+# transaction.on_commit(lambda: dewfewhfwe)
 
 def model_with_author_post_save(instance, created=False, *args, **kwargs):
     if created:

@@ -81,7 +81,7 @@ class UserViewSet(MultiSerializerViewSet):
             print param, self.request.query_params[param]
             if not u'username' == param and not u'pk' == param and not u'id' == param:
                 try:
-                    qs.filter(**{param: self.request.query_params[param]})
+                    qs = qs.filter(**{param: self.request.query_params[param]})
                 except FieldError as e:
                     print e
                     raise Http404("Cannot resolve keyword u'%s' into field" % param)

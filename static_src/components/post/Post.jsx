@@ -4,7 +4,8 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import apiUrls from '../ApiUrls';
-import {loadPost} from '../../actions/components/Post';
+import {loadPost} from '../../actions/components/PostAction';
+import CommentListEditable from '../comment/CommentListEditable';
 
 
 class Post extends React.Component {
@@ -22,74 +23,70 @@ class Post extends React.Component {
     };
 
     static propTypes = {
-        isLoading: PropTypes.bool.isRequired,
         id: PropTypes.number.isRequired,
-        post_object: PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            author: PropTypes.number.isRequired,
-            author_username: PropTypes.string.isRequired,
-            likes: PropTypes.arrayOf(PropTypes.number).isRequired,
-            created: PropTypes.string.isRequired,
-            updated: PropTypes.string.isRequired,
-            likes_count: PropTypes.number.isRequired,
-            comments_count: PropTypes.number.isRequired,
-            title: PropTypes.string.isRequired,
-            title_image: PropTypes.string.isRequired,
-        }),
+        postObject: PropTypes.object,
+        isLoaded: PropTypes.bool.isRequired,
+        loadPost: PropTypes.func.isRequired,
     };
 
+    postContentType = 11;
+
     componentDidMount() {
-        const url = apiUrls.postList + String(this.props.id);
-        console.log('LoadPost', url);
-        if (this.props.isLoading) {
+        if (!this.props.postObject) {
+            const url = apiUrls.postList + String(this.props.id);
             console.log('LoadPost', url);
             this.props.loadPost(url);
         }
     }
 
     render() {
-        if (this.props.isLoading) {
+        if (this.props.isLoaded) {
+            // debugger;
+            let imgSrc = this.props.postObject.title_image;
+            imgSrc = 'http://localhost/' + imgSrc.substr(imgSrc.search('/media') + 1);
+            return (
+                <div className='post-with-comment'>
+                    <Card>
+                        <CardHeader
+                            title={this.props.postObject.author_username}
+                            // subtitle={this.props.updated}
+                            // avatar="images/jsa-128.jpg"
+                        />
+                        <CardMedia
+                            overlay={
+                                <CardTitle title={this.props.postObject.title}
+                                           subtitle={this.props.postObject.updated}/>
+                            }
+                        >
+                            <img src={imgSrc} alt=""/>
+                        </CardMedia>
+                        {/*<CardTitle title={this.props.postObject.title} subtitle={this.props.postObject.updated}/>*/}
+                    </Card>
+                    <CommentListEditable contentType={this.postContentType} objectId={this.props.postObject.id}/>
+                </div>
+            );
+
+            // return <div>Nothing</div>;
+        } else {
             return <div className="comments-list">Loading...</div>;
         }
-
-        const imgSrc = this.props.post_object.title_image.substr(this.props.post_object.title_image.search('/media') + 1);
-        return (
-
-            <Card>
-                <CardHeader
-                    title={this.props.post_object.author_username}
-                    // subtitle={this.props.updated}
-                    // avatar="images/jsa-128.jpg"
-                />
-                <CardMedia
-                    overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle"/>}
-                >
-                    <img src={imgSrc} alt=""/>
-                </CardMedia>
-                <CardTitle title={this.props.post_object.title} subtitle={this.props.post_object.updated}/>
-            </Card>
-        );
-
-        // return <div>Nothing</div>;
     }
 }
 
 const mapStoreToProps = (store, ownProps) => {
-    // const comments = store.get('comments');
-    console.log('Post', store);
-    if ('posts' in store) {
-        const {posts} = store;
-        if (ownProps.id in posts) {
-            return {
-                id: ownProps.id,
-                isLoading: false,
-                post_object: posts[ownProps.id],
-            };
-        }
+    const posts = store.get('posts');
+    console.log('Post', posts);
+    // debugger;
+    if (posts.getIn(['postList', String(ownProps.id)])) {
+        return {
+            id: ownProps.id,
+            postObject: posts.getIn(['postList', String(ownProps.id)]),
+            isLoaded: true,
+        };
     }
     return {
-        commentList: ownProps.id,
-        isLoading: true,
+        id: ownProps.id,
+        isLoaded: false,
     };
 };
 //

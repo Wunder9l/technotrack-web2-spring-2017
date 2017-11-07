@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Comment from './Comment';
 import apiUrls from '../ApiUrls';
-import {loadComments} from '../../actions/components/Comment';
+import {loadComments} from '../../actions/components/CommentAction';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader'
 
@@ -12,6 +12,8 @@ import Subheader from 'material-ui/Subheader'
 class CommentList extends React.Component {
 
     static propTypes = {
+        contentType: PropTypes.number,
+        objectId: PropTypes.number,
         commentList: PropTypes.object.isRequired,
         isLoading: PropTypes.bool.isRequired,
         loadComments: PropTypes.func.isRequired,
@@ -20,7 +22,12 @@ class CommentList extends React.Component {
     // state = {commentList: [], isLoading};
 
     componentDidMount() {
-        this.props.loadComments(apiUrls.commentList);
+        if (this.props.contentType && this.props.objectId) {
+            const params = `?object_id=${this.props.objectId}&content_type=${this.props.contentType}`;
+            this.props.loadComments(apiUrls.commentList + params);
+        } else {
+            this.props.loadComments(apiUrls.commentList);
+        }
     }
 
     render() {
@@ -46,12 +53,14 @@ class CommentList extends React.Component {
 }
 
 
-const mapStoreToProps = (store) => {
+const mapStoreToProps = (store, ownProps) => {
     const comments = store.get('comments');
     // console.log("CommentList", comments);
     return {
         commentList: comments.get('commentList'),
         isLoading: comments.get('isLoading'),
+        contentType: ownProps.contentType,
+        objectId: ownProps.objectId,
     };
 };
 

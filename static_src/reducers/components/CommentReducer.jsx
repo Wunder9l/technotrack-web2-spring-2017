@@ -4,7 +4,7 @@ import {
     SUCCESSFUL_COMMENT_LOADING,
     START_COMMENT_LOADING,
     ADD_COMMENT,
-} from '../../actions/components/Comment';
+} from '../../actions/components/CommentAction';
 
 const initialState = Map({
     commentList: List(),
@@ -13,7 +13,7 @@ const initialState = Map({
 
 
 const reducer = (store = initialState, action) => {
-    console.log(action, store);
+    // console.log(action, store);
     switch (action.type) {
         case START_COMMENT_LOADING: {
             console.log(store);
@@ -29,8 +29,6 @@ const reducer = (store = initialState, action) => {
         }
         case ADD_COMMENT: {
             return store.update('commentList', list => list.insert(0, action.payload));
-            // store.set('isLoading', false);
-            // return store;
         }
         default:
             return store;
