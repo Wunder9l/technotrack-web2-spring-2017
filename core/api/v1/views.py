@@ -11,8 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from core.views import MultiSerializerViewSet
 from .serializers import LikeSerializer, UserListSerializer, UserDetailSerializer, UserSelfSerializer, \
-    PasswordSerializer
-from core.models import Like, User
+    PasswordSerializer, CreateRelationshipSerializer
+from core.models import Like, User, Relationship, RelationshipEnum
 from  core.permissions import IsOwnerOrAdminOrReadOnly
 
 
@@ -40,6 +40,26 @@ class UserSelfViewSet(ModelViewSet):
     def get_queryset(self):
         return [self.request.user, ]
 
+    @list_route(methods=['post', ], permission_classes=[IsAuthenticated, IsOwnerOrAdminOrReadOnly])
+    def relationship(self, request):
+        user = request.user
+        serializer = CreateRelationshipSerializer(data=request.data)
+        if serializer.is_valid():
+            to_user = User.objects.filter(id=serializer.validated_data['to_person'])[0]
+            validated_status = serializer.validated_data['status']
+            if user.id == to_user.id:
+                return Response({'to_person': 'You can not create relationship to yourself'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            relationship = user.add_relationship(to_user, validated_status)
+            if not relationship:
+                return Response(
+                    {'result': "Could not create relation, please try later"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'result': 'You {} {}'.format(RelationshipEnum().get_name(validated_status), to_user.username)})
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
     @list_route(methods=['post'], permission_classes=[IsAuthenticated, IsOwnerOrAdminOrReadOnly])
     def set_password(self, request):
         # user = self.get_object()
@@ -62,7 +82,6 @@ class UserSelfViewSet(ModelViewSet):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-
 
 class UserViewSet(MultiSerializerViewSet):
     model = User

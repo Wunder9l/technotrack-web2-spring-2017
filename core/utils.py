@@ -70,3 +70,6 @@ class Enum:
         if len(self.map) < len(self.choices):
             self.map = {self.choices[i]: i for i in range(len(self.choices))}
         return self.map.get(name)
+
+    def get_as_tuple(self):
+        return tuple((id, self.choices[i]) for i in range(len(self.choices)))

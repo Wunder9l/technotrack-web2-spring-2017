@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from core.models import Like, User
+from core.models import Like, User, RelationshipEnum, Relationship, RELATIONSHIP_BLOCKED
 from core.serializers import UserBriefSerializer, LikeAbleObjectSerializer
 from core.utils import check_password_to_satisfy_requirements
 
@@ -40,13 +40,37 @@ class PasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("Error on old_password: Field cannot be empty")
 
 
+class CreateRelationshipSerializer(serializers.Serializer):
+    to_person = serializers.IntegerField(required=True)
+    status = serializers.IntegerField(required=True)
+
+    def validate(self, data):
+        data = super(CreateRelationshipSerializer, self).validate(data)
+        if RelationshipEnum().get_name(data['status']):
+            if len(User.objects.filter(id=data['to_person'])) > 0:
+                return data
+            else:
+                raise serializers.ValidationError("User with id (%d) not found" % data['to_person'])
+        else:
+            raise serializers.ValidationError("Invalid status field")
+
+
 class UserSelfSerializer(serializers.ModelSerializer):
+    following = serializers.SerializerMethodField()
+    blocked = serializers.SerializerMethodField()
+
+    def get_following(self, obj):
+        return [{'id': u.id, 'username': u.username} for u in obj.get_following()]
+
+    def get_blocked(self, obj):
+        return [{'id': u.id, 'username': u.username} for u in
+                obj.get_relationships(RelationshipEnum().get_id(RELATIONSHIP_BLOCKED))]
+
     class Meta:
         model = User
-        # fields = '__all__'
         read_only_fields = 'last_login', 'date_joined', 'objects_count', 'user_permissions', \
                            'is_active', 'is_staff', 'is_superuser'
-        exclude = 'password',
+        exclude = 'password', 'relationships'
         # extra_kwargs = {'password': {'write_only': True}}
 
 
