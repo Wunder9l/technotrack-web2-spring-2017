@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
+from datetime import timedelta
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
+from core.constants import DIGEST_PERIOD
 from core.utils import Enum
 from event.eventtype import EventType, EVENT_SUBSCRIPTION, EVENT_LIKE
 
@@ -51,6 +54,13 @@ class User(AbstractUser):
     objects_count = models.IntegerField(default=0)
     relationships = models.ManyToManyField('self', related_name='related_to', symmetrical=False,
                                            through='Relationship')
+
+    last_digest_sent = models.DateTimeField(auto_now_add=True)
+
+    def is_digest_sent(self):
+        return (timezone.now() - self.last_digest_sent) > (timedelta(seconds=0.95 * DIGEST_PERIOD.total_seconds()))
+        # return False
+
 
     def add_relationship(self, user, status):
         if user.id == self.id:

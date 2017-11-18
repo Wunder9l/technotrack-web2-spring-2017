@@ -139,6 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATICFILES_DIRS = (
     os.path.join(os.path.join(BASE_DIR, os.pardir), 'static_assets'),
+    os.path.join(BASE_DIR, 'core/templates'),
 )
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'STATIC_ROOT')))
@@ -146,6 +147,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(os.path.join(BASE_DIR, os.pardir), config.get('main', 'MEDIA_ROOT')))
 
 EMAIL_PORT = config.get('main', 'EMAIL_PORT')
+ADMINS = [('Artem', 'vvarty@mail.com'), ]
+SITE_NO_REPLY_EMAIL = 'noreply@my-site.com'
+DEFAULT_EMAIL_IMAGE = os.path.join(STATIC_ROOT, 'core/email/images/simpsons_color.jpg')
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',
@@ -159,6 +163,9 @@ SOCIAL_AUTH_VK_OAUTH2_SECRET = config.get('vk_oauth2', 'SECRET')
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'photos']
 
 LOGIN_REDIRECT_URL = '/api/v1/'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULTS_BACKEND = 'redis://localhost:6379/0'
 
 WEBPACK_LOADER = {
     'DEFAULT': {

@@ -33,7 +33,7 @@ class Post extends React.Component {
 
     componentDidMount() {
         if (!this.props.postObject) {
-            const url = apiUrls.postList + String(this.props.id);
+            const url = apiUrls.postList + String(this.props.id) + '/';
             console.log('LoadPost', url);
             this.props.loadPost(url);
         }

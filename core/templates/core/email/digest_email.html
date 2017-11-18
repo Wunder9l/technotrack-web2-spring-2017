@@ -1,0 +1,18 @@
+{% extends "core/email/email_title_image.html" %}
+
+{% block title %}Hello, {{ username }}!{% endblock %}
+
+{% block text_content %}There is some news for you:
+    <div id="digest-news-block">
+        {#        {{ digest_news }}#}
+        {% for item in digest_news %}
+{#            <p>#}
+            <div>{{ item }}</div>
+{#            </p>#}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block btn_href %}{{ confirmation_link }}{% comment %}{% url 'home' %}{% endcomment %}{% endblock %}
+
+{% block btn_text %}Show more details{% endblock %}

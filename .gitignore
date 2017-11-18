@@ -2,3 +2,5 @@
 .idea
 /static_assets/
 /node_modules/
+/celerybeat-schedule
+migrations/

@@ -1,0 +1,11 @@
+{% extends "core/email/email_title_image.html" %}
+
+{% block title %}Hello, {{ username }}!{% endblock %}
+
+{% block text_content %}We are glad to greet you on our site!
+    To confirm your email please click a button below:
+{% endblock %}
+
+{% block btn_href %}{{ confirmation_link }}{% comment %}{% url 'home' %}{% endcomment %}{% endblock %}
+
+{% block btn_text %}Confirm your email{% endblock %}

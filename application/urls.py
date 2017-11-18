@@ -42,8 +42,9 @@ urlpatterns = [
     url(r'^social/', include('social_django.urls', namespace='social')),
     url(r'^api-token-auth/', rest_authtoken_views.obtain_auth_token),
 
-    url(r'^$', root_page),
-    url(r'^post/$', root_page),
+    url(r'^.*$', root_page, name='home'),
+    # url(r'^$', root_page, name='home'),
+    # url(r'^post/$', root_page),
 
 ]
 

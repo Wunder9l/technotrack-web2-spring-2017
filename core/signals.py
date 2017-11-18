@@ -6,7 +6,9 @@ from application import settings
 from core.models import WatchableModel, User
 from event.models import add_event_for_object
 from .models import ModelWithAuthor, Like
+from .tasks import send_confirmation_email_task
 from django.db import transaction
+
 
 # transaction.on_commit(lambda: dewfewhfwe)
 
@@ -43,8 +45,14 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-for user in User.objects.all():
-    Token.objects.get_or_create(user=user)
+@receiver(post_save, sender=User)
+def confirm_user_email(instance, created, *args, **kwargs):
+    if created:
+        transaction.on_commit(lambda: send_confirmation_email_task.apply_async([instance.id], {}))
+
+
+# for user in User.objects.all():
+#     Token.objects.get_or_create(user=user)
 
 for model in WatchableModel.__subclasses__():
     post_save.connect(watchable_object_post_save, model)
@@ -52,5 +60,6 @@ for model in WatchableModel.__subclasses__():
 for model in ModelWithAuthor.__subclasses__():
     post_save.connect(model_with_author_post_save, model)
 
-    # for model in WatchableModel.__subclasses__():
-    # post_save.connect(m)
+# post_save.connect()
+# for model in WatchableModel.__subclasses__():
+# post_save.connect(m)

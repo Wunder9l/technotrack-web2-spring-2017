@@ -11,3 +11,20 @@ redux-addons-middleware
 
 material-ui.com - наборы компонентов
 grommet.io - layout + components
+
+models:
+  user:
+    last_digest_send
+
+  achievements:
+    first_comment
+    100 likes
+    N followers
+
+  css:
+    flexbox (!!!)
+    grid
+
+    display flex
+
+datamigrations ->  django

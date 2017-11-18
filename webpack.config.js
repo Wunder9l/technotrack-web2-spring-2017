@@ -48,6 +48,10 @@ module.exports = {
                     loader: 'style-loader!css-loader',
                 },
                 {
+                    test: /\.scss$/,
+                    loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded',
+                },
+                {
                     test: /\.(png|jpg|gif|svg|ttf|eot|woff|woff2)$/,
                     loader: 'url-loader?limit=4096&name=[path][name].[ext]',
                 },
