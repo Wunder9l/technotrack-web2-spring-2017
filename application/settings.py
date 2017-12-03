@@ -85,6 +85,7 @@ TEMPLATES = [
 
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'adjacent.context_processors.main',
             ],
         },
     },
@@ -187,3 +188,9 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# ADJACENT - Centrifugo server integration with Django framework.
+INSTALLED_APPS += ('adjacent',)
+CENTRIFUGE_ADDRESS = 'http://localhost:8008'
+CENTRIFUGE_SECRET = 'c40a15ec-8f23-4e70-be1d-770086222d84'
+CENTRIFUGE_TIMEOUT = 10

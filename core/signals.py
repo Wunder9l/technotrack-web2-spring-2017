@@ -2,15 +2,14 @@ from django.db import transaction
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from adjacent import Client
 
 from application import settings
 from core.models import WatchableModel, User
+from event.eventtype import EventType
 from event.models import add_event_for_object
 from .models import ModelWithAuthor, Like
 from .tasks import send_confirmation_email_task
-
-
-# transaction.on_commit(lambda: dewfewhfwe)
 
 def model_with_author_post_save(instance, created=False, *args, **kwargs):
     if created:
@@ -24,6 +23,10 @@ def like_post_save(instance, created, *args, **kwargs):
         instance.object.likes_count += 1
         instance.object.save()
 
+        event_type = EventType().get_id(instance.get_event_type(created=created))
+        client =  Client()
+        client.publish("notification", {'message': instance.get_title_for_event(event_type)})
+        response = client.send()
 
 @receiver(pre_delete, sender=Like)
 def like_pre_delete(instance, *args, **kwargs):

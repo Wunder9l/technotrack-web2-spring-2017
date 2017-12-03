@@ -23,6 +23,7 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.7",
@@ -46,6 +47,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-addons-update": "^15.6.2",
+    "react-cent": "^1.0.23",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
@@ -55,6 +57,7 @@
     "redux-api-middleware": "^2.0.0-beta.3",
     "redux-devtools-extension": "^2.13.2",
     "redux-immutable": "^4.0.0",
+    "sockjs-client": "^1.1.4",
     "zepto-browserify": "^1.1.6-1"
   }
 }

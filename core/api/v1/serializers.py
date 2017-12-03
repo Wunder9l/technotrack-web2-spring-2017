@@ -17,7 +17,7 @@ class LikeSerializer(ModelSerializer):
         model = Like
         # fields = '__all__'
         fields = 'id', 'author', 'object', 'object_id', "content_type", 'content_type_as_string', 'created', 'updated',
-        read_only_fields = 'author', 'object', 'id', 'created', 'updated', 'content_type_as_string',
+        read_only_fields = 'id', 'author', 'object', 'created', 'updated', 'content_type_as_string',
 
     def get_content_type_as_string(self, like_object):
         type_str = str(like_object.object.__class__)

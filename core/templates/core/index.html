@@ -8,9 +8,17 @@
 </head>
 
 <body>
+<div id="centrifuge" style="display:none"
+     data-url="{{ CENTRIFUGE_WS_ENDPOINT }}"
+     data-user="{{ CENTRIFUGE_USER }}"
+     data-info="{{ CENTRIFUGE_INFO }}"
+     data-token="{{ CENTRIFUGE_TOKEN }}"
+     data-sockjsurl="{{ CENTRIFUGE_SOCKJS_ENDPOINT }}"
+     data-timestamp="{{ CENTRIFUGE_TIMESTAMP }}"
+></div>
 <div id="root">
     {% render_bundle 'index' %}
 </div>
-{#<script src="{% static "webpack-bundles/index.js" %}"></script>#}
+
 </body>
 </html>

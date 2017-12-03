@@ -7,6 +7,8 @@ import LikeList from './like/LikeList';
 import CommentListEditable from './comment/CommentListEditable';
 import NewsFeed from './NewsFeed';
 import Post from './post/Post';
+import {Messenger} from './websocket/Messenger';
+import {Notification} from './websocket/Notification';
 
 const injectTapEventPlugin = require('react-tap-event-plugin');
 
@@ -30,7 +32,7 @@ class App extends React.Component {
                     </Switch>
                 </article>
                 <aside className="aside aside-left">Aside 1</aside>
-                <aside className="aside aside-right">Aside 2</aside>
+                <aside className="aside aside-right">Aside 2<Notification/></aside>
                 <footer className="footer">Footer</footer>
             </div>
         );

@@ -4,3 +4,4 @@
 /node_modules/
 /celerybeat-schedule
 migrations/
+/application/whoosh_index/
