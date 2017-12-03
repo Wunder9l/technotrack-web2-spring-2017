@@ -40,15 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'core.apps.CoreConfig',
-    'comment.apps.CommentConfig',
-    'event.apps.EventConfig',
-    'post.apps.PostConfig',
+    'haystack',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'social_django',
     'webpack_loader',
+    'core.apps.CoreConfig',
+    'comment.apps.CommentConfig',
+    'event.apps.EventConfig',
+    'post.apps.PostConfig',
 ]
 
 MIDDLEWARE = [
@@ -177,3 +178,12 @@ WEBPACK_LOADER = {
         'IGNORE': ['.+\.hot-update.js', '.+\.map']
     }
 }
+
+# HAYSTACK
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

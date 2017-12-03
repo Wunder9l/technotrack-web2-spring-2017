@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -7,7 +8,6 @@ from core.models import WatchableModel, User
 from event.models import add_event_for_object
 from .models import ModelWithAuthor, Like
 from .tasks import send_confirmation_email_task
-from django.db import transaction
 
 
 # transaction.on_commit(lambda: dewfewhfwe)

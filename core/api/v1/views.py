@@ -6,7 +6,8 @@ from rest_framework import serializers, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
 
 from core.views import MultiSerializerViewSet
@@ -31,14 +32,38 @@ class LikeViewSet(ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-class UserSelfViewSet(ModelViewSet):
+class UserSelfViewSet(mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      GenericViewSet):
     model = User
     serializer_class = UserSelfSerializer
-    permission_classes = IsAuthenticated, IsOwnerOrAdminOrReadOnly
-    queryset = User.objects.all()
+    permission_classes = IsAuthenticated,
+    queryset = User.objects.all().filter(id=0)  #
+
+    # def get_serializer(self, instance=None, data=None, many=False, partial=True):
+    #     serializer = self.serializer_class(self.request.user, data=kwargs.get('data'), partial=True)
+    #     serializer.is_valid()
+    #     return serializer
+
+    # def get_serializer(self, instance, *args, **kwargs):
+    #     print  args, kwargs
+    #     print kwargs.get('data'), type(kwargs.get('data'))
+    #     serializer = self.serializer_class(self.request.user, data=dict(kwargs.get('data')), partial=True)
+    #     serializer.is_valid()
+    #     return serializer
+
+    def retrieve(self, request, *args, **kwargs):
+        serializer = self.serializer_class(instance=request.user)
+        return Response(serializer.data)
 
     def get_queryset(self):
         return [self.request.user, ]
+
+    def partial_update(self, request, *args, **kwargs):
+        serializer = self.serializer_class(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
     @list_route(methods=['post', ], permission_classes=[IsAuthenticated, IsOwnerOrAdminOrReadOnly])
     def relationship(self, request):
@@ -82,6 +107,7 @@ class UserSelfViewSet(ModelViewSet):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserViewSet(MultiSerializerViewSet):
     model = User

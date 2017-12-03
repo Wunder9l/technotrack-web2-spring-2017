@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import apiUrls from './ApiUrls';
 import {loadPost} from '../actions/components/PostAction';
 import CommentListEditable from './comment/CommentListEditable';
+import Event from './event/Event';
 
 
 const tilesData = [
@@ -102,24 +103,11 @@ class NewsFeed extends React.Component {
         // if (this.props.isLoaded) {
         return (
 
-            <div style={this.styles.root}>
-                cwvwevewvwe
-                <GridList
-                    cellHeight={180}
-                    style={this.styles.gridList}
-                >
-                    <Subheader>News</Subheader>
-                    {tilesData.map((tile) => (
-                        <GridTile
-                            key={tile.img}
-                            title={tile.title}
-                            subtitle={<span>by <b>{tile.author}</b></span>}
-                            actionIcon={<IconButton><StarBorder color="white"/></IconButton>}
-                        >
-                            <img src={tile.img}/>
-                        </GridTile>
-                    ))}
-                </GridList>
+            <div>
+            {/*<div style={this.styles.root}>*/}
+                <Event title="My Titel" />
+                <Event title="My Titel" />
+                <Event title="My Titel" />
             </div>
 
         );

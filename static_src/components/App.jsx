@@ -1,6 +1,6 @@
 import React from 'react';
 import {Switch, Route, Link} from 'react-router-dom';
-
+import {AppBar} from 'material-ui';
 import '../styles/base.scss';
 import EventList from './event/EventList';
 import LikeList from './like/LikeList';
@@ -17,13 +17,15 @@ class App extends React.Component {
     render() {
         return (
             <div className="wrapper">
-                <Link to='/post/'>Post</Link>
-                <Link to='/'>Home</Link>
-                <header className="header">Header</header>
+                <header className="header">
+                    <AppBar title="My AppBar"/>
+                </header>
                 <article className="main">
+                    <Link to='/post/'>Post</Link>
+                    <Link to='/'>Home</Link>
                     <Switch>
-                        {/*<Route exact path="/" component={NewsFeed}/>*/}
-                        <Route exact path="/" component={CommentListEditable}/>
+                        <Route exact path="/" component={NewsFeed}/>
+                        {/*<Route exact path="/" component={CommentListEditable}/>*/}
                         <Route exact path="/post/" render={(props) => <Post {...props} id={15}/>}/>
                     </Switch>
                 </article>

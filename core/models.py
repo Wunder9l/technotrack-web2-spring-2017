@@ -1,14 +1,19 @@
 from __future__ import unicode_literals
 
 from datetime import timedelta
+
+import os
+
+from PIL import Image
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
+from application.settings import MEDIA_ROOT
 from core.constants import DIGEST_PERIOD
-from core.utils import Enum
+from core.utils import Enum, avatar_save_path, get_128_avatar_filename
 from event.eventtype import EventType, EVENT_SUBSCRIPTION, EVENT_LIKE
 
 RELATIONSHIP_FOLLOWING = 'subscribed on'
@@ -56,11 +61,30 @@ class User(AbstractUser):
                                            through='Relationship')
 
     last_digest_sent = models.DateTimeField(auto_now_add=True)
+    avatar = models.ImageField(upload_to=avatar_save_path, verbose_name="avatar")
 
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+        self.create_avatar_128()
+
+    def create_avatar_128(self):
+        if self.avatar and os.path.isfile(os.path.join(MEDIA_ROOT, self.avatar.name)):
+            avatar_filename = os.path.join(MEDIA_ROOT, self.avatar.name)
+            avatar128 = get_128_avatar_filename(avatar_filename)
+            if not os.path.isfile(avatar128) or os.path.getmtime(avatar_filename) > os.path.getmtime(avatar128):
+                baseheight = 128
+                img = Image.open(avatar_filename)
+                hpercent = (baseheight / float(img.size[1]))
+                wsize = int((float(img.size[0]) * float(hpercent)))
+                img = img.resize((wsize, baseheight), Image.ANTIALIAS)
+                img.save(avatar128)
+        else:
+            # TODO delete avatar128
+            pass
+        
     def is_digest_sent(self):
         return (timezone.now() - self.last_digest_sent) > (timedelta(seconds=0.95 * DIGEST_PERIOD.total_seconds()))
         # return False
-
 
     def add_relationship(self, user, status):
         if user.id == self.id:

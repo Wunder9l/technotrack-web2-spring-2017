@@ -21,6 +21,7 @@ from core.views import root_page
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_authtoken_views
 from core.api.v1.views import LikeViewSet, UserViewSet, UserSelfViewSet
+from core.api.v1.search_endpoint import search_api
 from post.api.v1.views import PostViewSet
 from event.api.v1.views import EventReadOnlyViewSet
 from comment.api.v1.views import CommentViewSet
@@ -34,6 +35,7 @@ router.register(r'events', EventReadOnlyViewSet)
 router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
+    url(r'^api/v1/search/$', search_api, name='search_api'),
     url(r'^api/v1/', include(router.urls, namespace='api')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^admin/', admin.site.urls),
@@ -41,7 +43,7 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^social/', include('social_django.urls', namespace='social')),
     url(r'^api-token-auth/', rest_authtoken_views.obtain_auth_token),
-
+    url(r'^search/', include('haystack.urls', namespace='search')),
     url(r'^.*$', root_page, name='home'),
     # url(r'^$', root_page, name='home'),
     # url(r'^post/$', root_page),

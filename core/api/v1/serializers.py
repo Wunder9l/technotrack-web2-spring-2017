@@ -66,6 +66,18 @@ class UserSelfSerializer(serializers.ModelSerializer):
         return [{'id': u.id, 'username': u.username} for u in
                 obj.get_relationships(RelationshipEnum().get_id(RELATIONSHIP_BLOCKED))]
 
+    def update(self, instance, validated_data):
+        if validated_data and instance:
+            if 'avatar' in validated_data:
+                instance.avatar = validated_data['avatar']
+                instance.save()
+                del validated_data['avatar']
+                if not validated_data:
+                    return instance
+            User.objects.filter(id=instance.id).update(**validated_data)
+            instance.refresh_from_db()
+        return instance
+
     class Meta:
         model = User
         read_only_fields = 'last_login', 'date_joined', 'objects_count', 'user_permissions', \

@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from rest_framework import viewsets
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework import viewsets
 
 
-# Create your views here.
 class MultiSerializerViewSet(viewsets.ModelViewSet):
     serializers = {
         'default': None,
@@ -12,6 +11,7 @@ class MultiSerializerViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return self.serializers.get(self.action,
                                     self.serializers['default'])
+
 
 @ensure_csrf_cookie
 def root_page(request):

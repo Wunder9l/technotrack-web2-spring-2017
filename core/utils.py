@@ -2,6 +2,8 @@ import os
 import re
 import uuid
 
+from PIL import Image
+
 
 def image_save_path(instance, filename):
     if instance.id:
@@ -19,6 +21,14 @@ def image_save_path(instance, filename):
 
 def post_title_image_save_path(instance, filename):
     return image_save_path(instance, 'title_image' + os.path.splitext(filename)[1])
+
+
+def avatar_save_path(instance, filename):
+    return "user/%i/avatars/%s" % (instance.id, 'avatar' + os.path.splitext(filename)[1])
+
+
+def get_128_avatar_filename(avatar_filename):
+    return os.path.join(os.path.dirname(avatar_filename), 'avatar128' + os.path.splitext(avatar_filename)[1])
 
 
 def get_class_as_string(obj):
